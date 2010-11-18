@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V5.0//EN"
+                 "http://www.docbook.org/xml/5.0/dtd/docbook.dtd" [
+  <!ENTITY % local SYSTEM "local-entities.ent">
+  <!ENTITY % custom SYSTEM "custom-entities.ent">
+  %local;
+  %custom;
+]>
+<chapter xml:id="chapter.advanced-topics" version="5.0"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:product="http://www.carrot2.org">
+  <title>Advanced topics</title>
+  <subtitle>Building and running &C2; from source code</subtitle>
+
+  <para>
+    This chapter discusses more advanced usage scenarios of &C2; such as integration 
+    with Apache Solr, running &C2; applications in Eclipse and building &C2; from source code.
+  </para>
+
+  <section xml:id="section.advanced-topics.integration-with-solr">
+    <title>Integration with Apache Solr</title>
+    
+    <para>
+      As of version 1.4 of Apache Solr, &C2; clustering can be performed directly
+      within Solr. Please see the <link xlink:href="http://wiki.apache.org/solr/ClusteringComponent">&C2; 
+      Clustering Component wiki page</link> for information on configuring and running
+      &C2;-based search results clustering in Solr.
+    </para>
+    
+    <para id="section.advanced-topics.integration-with-solr.solr-1.4.x-patch">  
+      The 1.4.x line of Apache Solr ships with version 3.1.0 of &C2; clustering algorithms.
+      If you would like to take advantage of the newer releases of &C2; algorithms, you need 
+      to apply a compatibility package as shown below.
+    </para>
+    
+    <para>
+      To upgrade &C2; algorithms in Solr 1.4.x to the newest version:
+    </para>
+      
+    <orderedlist>
+      <listitem>
+          Download  <link xlink:href="http://download.carrot2.org/stable/carrot2-solr-1.4.x-compatibility-3.4.1.zip">&C2; Solr 1.4.x compatibility package</link>.
+      </listitem>
+      
+      <listitem>
+        <para>
+          Remove the following files from your Solr 1.4.x installation:
+        </para>
+
+        <orderedlist spacing="compact">
+          <listitem>
+            <simpara>contrib/clustering/lib/* (all files)</simpara>
+          </listitem>
+          
+          <listitem>
+            <simpara>dist/apache-solr-clustering-1.4.1.jar (Solr 1.4.1) or</simpara>
+          </listitem>
+          
+          <listitem>
+            <simpara>dist/apache-solr-clustering-1.4.0.jar (Solr 1.4.0)</simpara>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      
+      <listitem>
+        <para>
+          Copy the contents of the downloaded archive over the Solr home directory.
+        </para>
+      </listitem>
+      
+      <listitem>
+        <para>
+          Start Solr, clustering should be performed by the updated Carrot2 algorithms.
+        </para>
+      </listitem>
+    </orderedlist>
+    
+    <note>
+      <para>
+        Solr nightly builds (trunk, branch_3x) already ship with the newest version of &C2;
+        and do not require the compatibility package.       
+      </para>
+    </note>
+  </section>
+  
+  <section xml:id="section.advanced-topics.running-in-eclipse">
+    <title>Running &C2; in Eclipse IDE</title>
+    
+    <section xml:id="section.advanced-topics.running-in-eclipse.workbench">
+      <title>Running &DCW; in Eclipse IDE</title>
+      
+      <para>
+        To run &DCW; in Eclipse IDE (version 3.4 or higher required):
+      </para>
+      
+      <orderedlist>
+        <listitem>
+          <para>
+            <link linkend="section.integration.setting-up-carrot2-sources-in-eclipse">Set up &C2; source code in your Eclipse IDE.</link>
+          </para>
+        </listitem>
+        
+        <listitem>
+          <para>
+            Choose <guilabel>Window</guilabel> &gt; <guilabel>Preferences</guilabel> and
+            then <guilabel>Run/Debug</guilabel> &gt; <guilabel>String substitution</guilabel>.
+            Add a <code>temp_workspaces</code> variable pointing to a an existing disk 
+            directory where the Workbench's workspace should be created.
+          </para>
+        </listitem>
+        
+        <listitem>
+          <para>
+            Choose <guilabel>Run</guilabel> &gt; <guilabel>Run Configurations...</guilabel> from
+            the main menu and run the <varname>Workbench</varname> configuration.
+          </para>
+          
+          <figure xml:id="figure.workbench-run-configuration">
+            <title>Workbench Run Configuration</title>
+            <mediaobject>
+              <imageobject role="html">
+                <imagedata format="PNG" fileref="img/workbench-run-configuration.png" />
+              </imageobject>
+            </mediaobject>  
+          </figure>
+        </listitem>
+      </orderedlist>
+    </section>
+    
+    <section xml:id="section.advanced-topics.running-in-eclipse.webapp">
+      <title>Running &WA; in Eclipse IDE</title>
+      
+      <para>
+        To run &DCW; in Eclipse IDE:
+      </para>
+      
+      <orderedlist>
+        <listitem>
+          <para>
+            <link linkend="section.integration.setting-up-carrot2-sources-in-eclipse">Set up &C2; source code in your Eclipse IDE.</link>
+          </para>
+        </listitem>
+
+        <listitem>
+          <para>
+            Choose <guilabel>Run</guilabel> &gt; <guilabel>External Tools</guilabel> &gt; 
+            <guilabel>External Tools Configurations...</guilabel> from
+            the main menu and run the <varname>Attribute Metadata XML</varname> configuration.
+            This will build the metadata files required for the web application to show 
+            advanced options of document sources.
+          </para>
+        </listitem>
+
+        <listitem>
+          <para>
+            Choose <guilabel>Run</guilabel> &gt; <guilabel>External Tools</guilabel> &gt; 
+            <guilabel>External Tools Configurations...</guilabel> from
+            the main menu and run the <varname>Web Application Setup [carrot2]</varname> configuration.
+            This will preprocess various configuration files required by the web application.
+          </para>
+        </listitem>
+
+        <listitem>
+          <para>
+            Choose <guilabel>Run</guilabel> &gt; <guilabel>Run Configurations...</guilabel> from
+            the main menu and run the <varname>Web Application Runner [carrot2]</varname> configuration.
+          </para>
+        </listitem>
+
+        <listitem>
+          <para>
+            Point your browser to <link xlink:href="">http://localhost:8080</link> to access
+            the running web application.
+          </para>
+        </listitem>
+      </orderedlist>        
+    </section>
+  </section>
+  
+  <section xml:id="section.advanced-topics.building-from-source-code">
+    <title>Building &C2; from source code</title>
+    
+    <para>
+      To build &C2; applications from source code, you will need Java Softwade Development 
+      Kit (Java SDK) version 1.6 or higher and Apache Ant version 1.7.1 or higher.
+      You can chcek out the latest &C2; source code from the following SVN location:
+    </para>
+    
+    <programlisting><![CDATA[https://carrot2.svn.sourceforge.net/svnroot/carrot2/trunk]]></programlisting>
+    
+    <section xml:id="section.advanced-topics.building-from-source-code.workbench">
+      <title>Building &DCW;</title>
+      
+      <para>
+        To build &DCW; from source code:
+      </para>
+      
+      <orderedlist>
+        <listitem>
+          <para>
+            Download Eclipse Target Platform from <link xlink:href="http://download.carrot2.org/eclipse" />
+            and extract to some local folder.
+          </para>
+        </listitem>
+        
+        <listitem>
+          <para>
+            Copy <filename>workbench.properties.example</filename> from &C2; checkout folder 
+            to <filename>workbench.properties</filename> in the same folder. In
+            <filename>workbench.properties</filename> edit the <tag>target.platform</tag>
+            property to point to the Eclipse Target Platform you have downloaded.
+          </para>
+          
+          <important>
+            <para>
+              The folder pointed to by <tag>target.platform</tag> must have the <filename>eclipse/</filename>
+              folder inside. 
+            </para>
+          </important>
+          
+          <para>
+            You may also need to change the <tag>configs</tag> property to
+            match the platform you want to build &DCW; for. 
+          </para>
+        </listitem>
+        
+        <listitem>
+          <para>
+            Run:
+            
+            <programlisting><![CDATA[ant -f build-workbench.xml build]]></programlisting>
+            
+            to build &DCW; binaries.
+          </para>
+        </listitem>
+        
+        <listitem>
+          <para>
+            Go to the <filename>tmp/ workbench/ tmp/ carrot2-workbench</filename>
+            folder in the &C2; checkout dir and run &DCW;.
+          </para>
+        </listitem>
+      </orderedlist>
+      </section>
+    
+    <section xml:id="section.advanced-topics.building-from-source-code.webapp">
+      <title>Building &WA;</title>
+      
+      <para>
+        To build &WA; from source code:
+      </para>
+      
+      <orderedlist>
+        <listitem>
+          <para>
+            Run:
+            
+            <programlisting><![CDATA[ant webapp]]></programlisting>
+            
+            in the main &PROD; checkout directory.
+          </para>
+        </listitem>
+        
+        <listitem>
+          <para>
+            Go to the <filename>tmp/webapp/</filename>
+            folder in the &C2; checkout dir where you will find the web application WAR file.
+          </para>
+        </listitem>
+      </orderedlist>
+    </section>
+  </section>
+
+  <section xml:id="section.advanced-topics.using-dcs-with-curl">
+    <title>Using &DCS; with <command>curl</command></title>
+    
+    <para>
+      You can use <command>curl</command> to post requests to the &DCS; 
+      <xref linkend="figure.dcs-curl-from-document-source" /> shows how to use <command>curl</command>
+      to query an external document source and cluster the results using the DCS.
+      <xref linkend="figure.dcs-curl-from-local-file" /> shows how to cluster documents
+      from an XML file in <link linkend="section.architecture.input-xml">&C2; format</link> using the DCS.
+      Please see the <filename>examples/curl</filename> directory of the &DCS; distribution
+      archive for more <command>curl</command> DCS invocation examples.
+    </para>
+      
+    <figure xml:id="figure.dcs-curl-from-document-source">
+      <title>Using DCS and curl to cluster data from document source</title>
+      <programlisting><![CDATA[curl http://localhost/dcs/rest \
+     -F "dcs.source=etools" \
+     -F "query=test" \
+     -o result.xml]]></programlisting>      
+    </figure>
+      
+    <figure xml:id="figure.dcs-curl-from-local-file">
+      <title>Using DCS and curl to cluster data from document source</title>
+      <programlisting><![CDATA[curl http://localhost/dcs/rest \
+     -F "dcs.c2stream=@documents-in-carrot2-format.xml" \
+     -o result.xml]]></programlisting>      
+    </figure>
+    
+    <tip>
+      <para>
+        You can download <command>curl</command> for Windows from 
+        <link xlink:href="http://curl.haxx.se/latest.cgi?curl=win32-nossl" />.
+      </para>
+    </tip>
+  </section>
+  
+  <section xml:id="section.advanced-topics.http-proxies">
+    <title>Working with HTTP proxies</title>
+    
+    <para>
+    If your server or development machine connects to HTTP servers via a HTTP
+    proxy, you can most of &C2; document source implementations
+    to take this information into account by defining the following global
+    system properties:
+    </para>
+
+    <variablelist>
+      <varlistentry>
+        <term>http.proxyhost</term>
+        <listitem><para>URL of the HTTP proxy (numeric or full address, but
+        without the port number).</para></listitem>
+      </varlistentry>
+  
+      <varlistentry>
+        <term>http.proxyport</term>
+        <listitem><para>Proxy server's port number.</para></listitem>
+      </varlistentry>
+    </variablelist>
+    
+    <para>
+      Two sources that currently do not support the above properties are: 
+      BingDocumentSource and OpenSearchDocumentSource.
+    </para>
+    
+    <note>
+      <para>Password-based authentication is not supported at the moment.
+      You can alter the source code to change this 
+      in the <filename>HttpUtils</filename> class.</para>
+    </note>
+  </section>
+  
+  <section xml:id="section.advanced-topics.native-matrix-computations">
+    <title>Enabling native matrix computations</title>
+    
+    <para>
+      To speed up clustering performed by the Lingo algorithm, you can
+      configure &C2; to use a native platform-specific matrix computation
+      library. Depending on the platform, you may see up to a 400% speed-up
+      compared to the Java-only mode.
+    </para>
+    
+    <para>
+      To enable native matrix computations for &C2;:
+    </para>
+
+    <orderedlist>
+      <listitem>
+        <para>
+          <link xlink:href="http://download.carrot2.org/nni/">Download</link> precompiled 
+          libraries for your platform and extract the archive to some local directory. 
+        </para>
+        
+        <note>
+          <para>
+            If no distribution matches your platform, and you would like to
+            compile your own version, please ask on the mailing list for
+            instructions. You can also try the PIII (Pentium III) versions, which
+            seem to work quite well on modern processors as well (e.g. Core2 Duo).
+          </para>
+        </note>
+      </listitem>
+
+      <listitem>
+        <para>
+          Add an additional option to your JVM command line invocation providing the 
+          path to the <emphasis role="bold">directory</emphasis> to which you extracted the native library:
+        </para>
+        <programlisting><![CDATA[java -Djava.library.path=[native-lib-dir] ...]]></programlisting>
+        
+        <para>
+          To enable native computations in web applications deployed to Apache Tomcat,
+          pass the above directive in the <varname>JAVA_OPTS</varname> environment 
+          variable, e.g.:
+        </para>
+        <programlisting><![CDATA[export JAVA_OPTS="-Djava.library.path=[native-lib-dir]"]]></programlisting>
+      </listitem>
+
+      <listitem>
+        <para>
+          When &C2; correctly loads the native library, upon initialization of the Lingo
+          clustering algorithm, the following entry should appear in application logs:
+        </para>
+        <programlisting><![CDATA[INFO org.carrot2.clustering.lingo.LingoClustering
+Algorithm: Native BLAS routines available]]></programlisting>
+      </listitem>
+    </orderedlist>
+  </section>
+</chapter>
