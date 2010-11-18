@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="carrot2-util-text" default="help">
+	<property file="local.properties" />
+
+	<target name="help">
+		<echo>Run: ant -p</echo>
+	</target>
+
+	<target name="jflex" description="Recompile JFlex parsers.">
+        <java classname="JFlex.Main" fork="true">
+            <classpath location="lib/JFlex.jar" />
+
+            <arg value="-nobak" />
+            <arg file="src/org/carrot2/text/analysis/ExtendedWhitespaceTokenizerImpl.jflex" />
+        </java>
+	</target>
+</project>
